@@ -1,0 +1,30 @@
+html:not(.et-fb-root-ancestor) .ef-area.df-rows:not(.df-show) > .et_pb_row:not(.df-buttons):not([class^='df-elementindex-']):not([class*=' df-elementindex-'])  {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not(.et-fb-root-ancestor) .ef-area:not(.df-rows):not(.df-show) > .et_pb_row:not(.df-buttons) > .et_pb_column:not([class^='df-elementindex-']):not([class*=' df-elementindex-']) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 0 !important;
+  box-shadow: none !important;
+}
+
+html:not(.et-fb-root-ancestor) .ef-area:not(.df-rows):not(.df-loaded) > .et_pb_row > .et_pb_column {
+  display: none;
+}
+
+html:not(.et-fb-root-ancestor) .ef-area.df-rows:not(.df-loaded) > .et_pb_row {
+  display: none;
+}
+
+/* change cursor for ef-button */
+.ef-button {
+  cursor: pointer;
+}
