@@ -1,0 +1,42 @@
+{
+  "instance_id": "00000000-0000-0000-0000-000000000000",
+  "id": "347f42c5-4434-47df-b2bb-283e8ddf2d36",
+  "aud": "authenticated",
+  "role": "authenticated",
+  "email": "test@example.com",
+  "encrypted_password": "$2a$10$czIA0f1untcXgQqsVbiyDuaqdNuv8JhcQN5yitUiWcSPLZVIxEQTG",
+  "email_confirmed_at": "2025-01-02 10:00:52.873523+00",
+  "invited_at": null,
+  "confirmation_token": "",
+  "confirmation_sent_at": null,
+  "recovery_token": "",
+  "recovery_sent_at": null,
+  "email_change_token_new": "",
+  "email_change": "",
+  "email_change_sent_at": null,
+  "last_sign_in_at": "2025-01-02 10:47:25.675239+00",
+  "raw_app_meta_data": {
+    "provider": "email",
+    "providers": [
+      "email"
+    ]
+  },
+  "raw_user_meta_data": {},
+  "is_super_admin": null,
+  "created_at": "2025-01-02 10:00:52.870276+00",
+  "updated_at": "2025-01-02 20:42:40.848515+00",
+  "phone": null,
+  "phone_confirmed_at": null,
+  "phone_change": "",
+  "phone_change_token": "",
+  "phone_change_sent_at": null,
+  "confirmed_at": "2025-01-02 10:00:52.873523+00",
+  "email_change_token_current": "",
+  "email_change_confirm_status": 0,
+  "banned_until": null,
+  "reauthentication_token": "",
+  "reauthentication_sent_at": null,
+  "is_sso_user": false,
+  "deleted_at": null,
+  "is_anonymous": false
+}
