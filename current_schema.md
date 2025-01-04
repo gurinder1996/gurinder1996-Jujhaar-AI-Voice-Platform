@@ -1,210 +1,455 @@
-# Current Database Schema
+# List all tables and their columns:
 
-## Agents Table
-- `id` text NOT NULL
-- `organization_id` text NOT NULL
-- `name` text NOT NULL
-- `created_at` timestamp with time zone DEFAULT now()
-- `updated_at` timestamp with time zone
-- `greeting` text
-- `personality` text
-- `first_message` text
-- `first_message_mode` text
-- `hipaa_enabled` boolean DEFAULT false
-- `voice_config` jsonb DEFAULT {
-  - provider: '11labs'
-  - voiceId: 'joseph'
-  - language: ''
-  - stability: 0
-  - similarityBoost: 0
-  - style: 0
-  - useSpeakerBoost: false
-  - optimizeStreamingLatency: 0
-  - chunkPlan: {}
-  - enableSsmlParsing: false
-  - fallbackPlan: { voices: [{ provider: 'rime-ai', voiceId: 'allison' }] }
-  - speechNormalization: false
-  - boostedKeywords: []
-  - backchanneling: false
-  - interruptionSensitivity: 0.5
-  - responsiveness: 0.5
-}
-- `model_config` jsonb DEFAULT {
-  - provider: 'openai'
-  - emotionRecognitionEnabled: false
-  - fallbackModels: ['gpt-4o-mini', 'gpt-4']
-  - maxTokens: 0
-  - temperature: 0
-  - semanticCachingEnabled: false
-  - numFastTurns: 0
-  - messages: []
-  - tools: []
-  - toolIds: []
-  - knowledgeBaseId: ''
-  - knowledgeBase: { server: { url: '', timeoutSeconds: 0, secret: '', headers: {} } }
-  - customFunctions: []
-}
-- `transcriber_config` jsonb DEFAULT {
-  - provider: 'deepgram'
-  - codeSwitchingEnabled: false
-  - endpointing: 0
-  - keywords: []
-  - language: null
-  - model: null
-  - smartFormat: false
-}
-- `call_config` jsonb DEFAULT {
-  - silenceTimeoutSeconds: 0
-  - maxDurationSeconds: 0
-  - backgroundSound: null
-  - backgroundDenoisingEnabled: false
-  - modelOutputInMessagesEnabled: false
-  - transportConfigurations: []
-  - endCallMessage: ''
-  - endCallPhrases: []
-  - clientMessages: []
-  - serverMessages: []
-}
-- `voicemail_config` jsonb DEFAULT {
-  - detection: {
-    - provider: 'twilio'
-    - enabled: false
-    - voicemailDetectionTypes: []
-    - machineDetectionTimeout: 0
-    - machineDetectionSpeechThreshold: 0
-    - machineDetectionSpeechEndThreshold: 0
-    - machineDetectionSilenceTimeout: 0
-  }
-  - message: ''
-}
-- `analysis_config` jsonb DEFAULT {
-  - summaryPlan: {
-    - messages: []
-    - enabled: false
-    - timeoutSeconds: 0
-  }
-  - structuredDataPlan: {
-    - messages: []
-    - enabled: false
-    - schema: { items: {}, properties: {}, description: '', required: [] }
-    - timeoutSeconds: 0
-  }
-  - successEvaluationPlan: {
-    - rubric: null
-    - messages: []
-    - enabled: false
-    - timeoutSeconds: 0
-  }
-}
-- `artifact_config` jsonb DEFAULT {
-  - recordingEnabled: false
-  - videoRecordingEnabled: false
-  - transcriptPlan: {
-    - enabled: false
-    - assistantName: ''
-    - userName: ''
-  }
-  - recordingPath: ''
-}
-- `message_config` jsonb DEFAULT {
-  - idleMessages: []
-  - idleMessageMaxSpokenCount: 0
-  - idleTimeoutSeconds: 0
-}
-- `speaking_config` jsonb DEFAULT {
-  - startPlan: {
-    - waitSeconds: 0
-    - smartEndpointingEnabled: false
-    - customEndpointingRules: []
-    - transcriptionEndpointingPlan: {
-      - onPunctuationSeconds: 0
-      - onNoPunctuationSeconds: 0
-      - onNumberSeconds: 0
-    }
-  }
-  - stopPlan: {
-    - numWords: 0
-    - voiceSeconds: 0
-    - backoffSeconds: 0
-  }
-}
-- `monitor_config` jsonb DEFAULT {
-  - listenEnabled: false
-  - controlEnabled: false
-}
-- `server_config` jsonb DEFAULT {
-  - url: ''
-  - timeoutSeconds: 0
-  - secret: ''
-  - headers: {}
-}
-- `metadata` jsonb DEFAULT {}
-- `credential_ids` text[] DEFAULT ARRAY[]::text[]
-- `guidelines` text
-- `status` text DEFAULT 'active'
-- `notification_config` jsonb DEFAULT {
-  - emailSummary: 'never'
-  - contactInfo: {
-    - email: ''
-    - phoneNumber: ''
-  }
-  - notificationEvents: {
-    - everyCall: false
-    - liveActionError: false
-    - unhappyCustomer: false
-    - requiredInformation: false
-    - humanFollowUp: false
-  }
-}
 
-## Knowledge Base Table
-- `id` text NOT NULL
-- `agent_id` text NOT NULL
-- `question` text NOT NULL
-- `answer` text NOT NULL
-- `created_at` timestamp with time zone DEFAULT now()
+"table_schema","table_name","column_name","data_type","column_default","is_nullable"
+"auth","audit_log_entries","instance_id","uuid","","YES"
+"auth","audit_log_entries","id","uuid","","NO"
+"auth","audit_log_entries","payload","json","","YES"
+"auth","audit_log_entries","created_at","timestamp with time zone","","YES"
+"auth","audit_log_entries","ip_address","character varying","''::character varying","NO"
+"auth","flow_state","id","uuid","","NO"
+"auth","flow_state","user_id","uuid","","YES"
+"auth","flow_state","auth_code","text","","NO"
+"auth","flow_state","code_challenge_method","USER-DEFINED","","NO"
+"auth","flow_state","code_challenge","text","","NO"
+"auth","flow_state","provider_type","text","","NO"
+"auth","flow_state","provider_access_token","text","","YES"
+"auth","flow_state","provider_refresh_token","text","","YES"
+"auth","flow_state","created_at","timestamp with time zone","","YES"
+"auth","flow_state","updated_at","timestamp with time zone","","YES"
+"auth","flow_state","authentication_method","text","","NO"
+"auth","flow_state","auth_code_issued_at","timestamp with time zone","","YES"
+"auth","identities","provider_id","text","","NO"
+"auth","identities","user_id","uuid","","NO"
+"auth","identities","identity_data","jsonb","","NO"
+"auth","identities","provider","text","","NO"
+"auth","identities","last_sign_in_at","timestamp with time zone","","YES"
+"auth","identities","created_at","timestamp with time zone","","YES"
+"auth","identities","updated_at","timestamp with time zone","","YES"
+"auth","identities","email","text","","YES"
+"auth","identities","id","uuid","gen_random_uuid()","NO"
+"auth","instances","id","uuid","","NO"
+"auth","instances","uuid","uuid","","YES"
+"auth","instances","raw_base_config","text","","YES"
+"auth","instances","created_at","timestamp with time zone","","YES"
+"auth","instances","updated_at","timestamp with time zone","","YES"
+"auth","mfa_amr_claims","session_id","uuid","","NO"
+"auth","mfa_amr_claims","created_at","timestamp with time zone","","NO"
+"auth","mfa_amr_claims","updated_at","timestamp with time zone","","NO"
+"auth","mfa_amr_claims","authentication_method","text","","NO"
+"auth","mfa_amr_claims","id","uuid","","NO"
+"auth","mfa_challenges","id","uuid","","NO"
+"auth","mfa_challenges","factor_id","uuid","","NO"
+"auth","mfa_challenges","created_at","timestamp with time zone","","NO"
+"auth","mfa_challenges","verified_at","timestamp with time zone","","YES"
+"auth","mfa_challenges","ip_address","inet","","NO"
+"auth","mfa_challenges","otp_code","text","","YES"
+"auth","mfa_factors","id","uuid","","NO"
+"auth","mfa_factors","user_id","uuid","","NO"
+"auth","mfa_factors","friendly_name","text","","YES"
+"auth","mfa_factors","factor_type","USER-DEFINED","","NO"
+"auth","mfa_factors","status","USER-DEFINED","","NO"
+"auth","mfa_factors","created_at","timestamp with time zone","","NO"
+"auth","mfa_factors","updated_at","timestamp with time zone","","NO"
+"auth","mfa_factors","secret","text","","YES"
+"auth","mfa_factors","phone","text","","YES"
+"auth","mfa_factors","last_challenged_at","timestamp with time zone","","YES"
+"auth","one_time_tokens","id","uuid","","NO"
+"auth","one_time_tokens","user_id","uuid","","NO"
+"auth","one_time_tokens","token_type","USER-DEFINED","","NO"
+"auth","one_time_tokens","token_hash","text","","NO"
+"auth","one_time_tokens","relates_to","text","","NO"
+"auth","one_time_tokens","created_at","timestamp without time zone","now()","NO"
+"auth","one_time_tokens","updated_at","timestamp without time zone","now()","NO"
+"auth","refresh_tokens","instance_id","uuid","","YES"
+"auth","refresh_tokens","id","bigint","nextval('refresh_tokens_id_seq'::regclass)","NO"
+"auth","refresh_tokens","token","character varying","","YES"
+"auth","refresh_tokens","user_id","character varying","","YES"
+"auth","refresh_tokens","revoked","boolean","","YES"
+"auth","refresh_tokens","created_at","timestamp with time zone","","YES"
+"auth","refresh_tokens","updated_at","timestamp with time zone","","YES"
+"auth","refresh_tokens","parent","character varying","","YES"
+"auth","refresh_tokens","session_id","uuid","","YES"
+"auth","saml_providers","id","uuid","","NO"
+"auth","saml_providers","sso_provider_id","uuid","","NO"
+"auth","saml_providers","entity_id","text","","NO"
+"auth","saml_providers","metadata_xml","text","","NO"
+"auth","saml_providers","metadata_url","text","","YES"
+"auth","saml_providers","attribute_mapping","jsonb","","YES"
+"auth","saml_providers","created_at","timestamp with time zone","","YES"
+"auth","saml_providers","updated_at","timestamp with time zone","","YES"
+"auth","saml_providers","name_id_format","text","","YES"
+"auth","saml_relay_states","id","uuid","","NO"
+"auth","saml_relay_states","sso_provider_id","uuid","","NO"
+"auth","saml_relay_states","request_id","text","","NO"
+"auth","saml_relay_states","for_email","text","","YES"
+"auth","saml_relay_states","redirect_to","text","","YES"
+"auth","saml_relay_states","created_at","timestamp with time zone","","YES"
+"auth","saml_relay_states","updated_at","timestamp with time zone","","YES"
+"auth","saml_relay_states","flow_state_id","uuid","","YES"
+"auth","schema_migrations","version","character varying","","NO"
+"auth","sessions","id","uuid","","NO"
+"auth","sessions","user_id","uuid","","NO"
+"auth","sessions","created_at","timestamp with time zone","","YES"
+"auth","sessions","updated_at","timestamp with time zone","","YES"
+"auth","sessions","factor_id","uuid","","YES"
+"auth","sessions","aal","USER-DEFINED","","YES"
+"auth","sessions","not_after","timestamp with time zone","","YES"
+"auth","sessions","refreshed_at","timestamp without time zone","","YES"
+"auth","sessions","user_agent","text","","YES"
+"auth","sessions","ip","inet","","YES"
+"auth","sessions","tag","text","","YES"
+"auth","sso_domains","id","uuid","","NO"
+"auth","sso_domains","sso_provider_id","uuid","","NO"
+"auth","sso_domains","domain","text","","NO"
 
-## Organizations Table
-- `id` text NOT NULL
-- `name` text NOT NULL
-- `owner_id` uuid NOT NULL
-- `created_at` timestamp with time zone DEFAULT now()
 
-## Workflows Table
-- `id` text NOT NULL
-- `agent_id` text NOT NULL
-- `title` text NOT NULL
-- `definition_json` jsonb NOT NULL
-- `created_at` timestamp with time zone DEFAULT now()
 
-## Calls Table
-- `id` text NOT NULL
-- `assistantid` text
-- `phonenumberid` text
-- `type` text
-- `startedat` timestamp with time zone
-- `endedat` timestamp with time zone
-- `transcript` text
-- `recordingurl` text
-- `summary` text
-- `createdat` timestamp with time zone
-- `updatedat` timestamp with time zone
-- `orgid` text
-- `cost` numeric
-- `assistant` jsonb
-- `customer` jsonb
-- `status` text
-- `endedreason` text
-- `messages` jsonb
-- `stereorecordingurl` text
-- `costbreakdown` jsonb
-- `phonecallprovider` text
-- `phonecallproviderid` text
-- `phonecalltransport` text
-- `analysis` jsonb
-- `artifact` jsonb
-- `costs` jsonb
-- `monitor` jsonb
-- `transport` jsonb
-- `webcallurl` text
-- `assistantoverrides` jsonb
+# List all foreign key relationships:
+"table_schema","constraint_name","table_name","column_name","foreign_table_schema","foreign_table_name","foreign_column_name"
+"auth","identities_user_id_fkey","identities","user_id","auth","users","id"
+"auth","sessions_user_id_fkey","sessions","user_id","auth","users","id"
+"auth","refresh_tokens_session_id_fkey","refresh_tokens","session_id","auth","sessions","id"
+"auth","mfa_factors_user_id_fkey","mfa_factors","user_id","auth","users","id"
+"auth","mfa_challenges_auth_factor_id_fkey","mfa_challenges","factor_id","auth","mfa_factors","id"
+"auth","mfa_amr_claims_session_id_fkey","mfa_amr_claims","session_id","auth","sessions","id"
+"auth","sso_domains_sso_provider_id_fkey","sso_domains","sso_provider_id","auth","sso_providers","id"
+"auth","saml_providers_sso_provider_id_fkey","saml_providers","sso_provider_id","auth","sso_providers","id"
+"auth","saml_relay_states_sso_provider_id_fkey","saml_relay_states","sso_provider_id","auth","sso_providers","id"
+"auth","saml_relay_states_flow_state_id_fkey","saml_relay_states","flow_state_id","auth","flow_state","id"
+"auth","one_time_tokens_user_id_fkey","one_time_tokens","user_id","auth","users","id"
+"public","agents_organization_id_fkey","agents","organization_id","public","organizations","id"
+"public","knowledge_base_agent_id_fkey","knowledge_base","agent_id","public","agents","id"
+"public","workflows_agent_id_fkey","workflows","agent_id","public","agents","id"
+
+# List all RLS policies:
+"schemaname","tablename","policyname","permissive","roles","cmd","qual","with_check"
+"public","agents","Users can update their own organization's agent guidelines","PERMISSIVE","{public}","UPDATE","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","agents","Users can view their own organization's agent guidelines","PERMISSIVE","{public}","SELECT","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","agents","agents_delete_policy","PERMISSIVE","{public}","DELETE","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","agents","agents_insert_policy","PERMISSIVE","{public}","INSERT","","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))"
+"public","agents","agents_select_policy","PERMISSIVE","{public}","SELECT","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","agents","agents_update_policy","PERMISSIVE","{public}","UPDATE","(organization_id IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","calls","calls_insert_policy","PERMISSIVE","{public}","INSERT","","(orgid IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))"
+"public","calls","calls_select_policy","PERMISSIVE","{public}","SELECT","(orgid IN ( SELECT organizations.id\n   FROM organizations\n  WHERE (organizations.owner_id = uid())))",""
+"public","knowledge_base","knowledge_base_delete_policy","PERMISSIVE","{public}","DELETE","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+"public","knowledge_base","knowledge_base_insert_policy","PERMISSIVE","{public}","INSERT","","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))"
+"public","knowledge_base","knowledge_base_select_policy","PERMISSIVE","{public}","SELECT","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+"public","knowledge_base","knowledge_base_update_policy","PERMISSIVE","{public}","UPDATE","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+"public","organizations","organizations_delete_policy","PERMISSIVE","{public}","DELETE","(owner_id = uid())",""
+"public","organizations","organizations_insert_policy","PERMISSIVE","{public}","INSERT","","(owner_id = uid())"
+"public","organizations","organizations_select_policy","PERMISSIVE","{public}","SELECT","(owner_id = uid())",""
+"public","organizations","organizations_update_policy","PERMISSIVE","{public}","UPDATE","(owner_id = uid())",""
+"public","workflows","workflows_delete_policy","PERMISSIVE","{public}","DELETE","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+"public","workflows","workflows_insert_policy","PERMISSIVE","{public}","INSERT","","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))"
+"public","workflows","workflows_select_policy","PERMISSIVE","{public}","SELECT","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+"public","workflows","workflows_update_policy","PERMISSIVE","{public}","UPDATE","(agent_id IN ( SELECT agents.id\n   FROM agents\n  WHERE (agents.organization_id IN ( SELECT organizations.id\n           FROM organizations\n          WHERE (organizations.owner_id = uid())))))",""
+
+
+
+# List all users (from auth.users):
+"id","email","role","created_at","last_sign_in_at","raw_app_meta_data","raw_user_meta_data"
+"cdbd307d-7f1b-4f8c-b8f7-78b09c03f3b8","gurindersaini1713@gmail.com","authenticated","2025-01-02 10:03:36.871173+00","","{""provider"":""email"",""providers"":[""email""]}","{""sub"":""cdbd307d-7f1b-4f8c-b8f7-78b09c03f3b8"",""email"":""gurindersaini1713@gmail.com"",""email_verified"":false,""phone_verified"":false,""email_confirmed"":true}"
+"c01f61e0-f198-485b-8fed-685eb407a53b","gurinder@gmail.cpom","authenticated","2025-01-02 09:54:38.244306+00","","{""provider"":""email"",""providers"":[""email""]}","{""sub"":""c01f61e0-f198-485b-8fed-685eb407a53b"",""email"":""gurinder@gmail.cpom"",""email_verified"":false,""phone_verified"":false}"
+"5a24be1e-b3d9-46c8-8510-efae212d73f9","gurindersaini528@gmail.com","authenticated","2025-01-02 10:03:51.161622+00","","{""provider"":""email"",""providers"":[""email""]}","{""sub"":""5a24be1e-b3d9-46c8-8510-efae212d73f9"",""email"":""gurindersaini528@gmail.com"",""email_verified"":false,""phone_verified"":false,""email_confirmed"":true}"
+"880cc740-985c-4b0d-b01f-5da9b7edc709","gurinderfbaexcel@gmail.com","authenticated","2025-01-02 09:54:55.667416+00","","{""provider"":""email"",""providers"":[""email""]}","{""sub"":""880cc740-985c-4b0d-b01f-5da9b7edc709"",""email"":""gurinderfbaexcel@gmail.com"",""email_verified"":false,""phone_verified"":false}"
+"347f42c5-4434-47df-b2bb-283e8ddf2d36","test@example.com","authenticated","2025-01-02 10:00:52.870276+00","2025-01-03 03:59:59.007972+00","{""provider"":""email"",""providers"":[""email""]}","{}"
+
+# Check table permissions:
+"table_schema","table_name","grantee","privilege_type"
+"auth","audit_log_entries","dashboard_user","DELETE"
+"auth","audit_log_entries","dashboard_user","INSERT"
+"auth","audit_log_entries","dashboard_user","REFERENCES"
+"auth","audit_log_entries","dashboard_user","SELECT"
+"auth","audit_log_entries","dashboard_user","TRIGGER"
+"auth","audit_log_entries","dashboard_user","TRUNCATE"
+"auth","audit_log_entries","dashboard_user","UPDATE"
+"auth","audit_log_entries","postgres","DELETE"
+"auth","audit_log_entries","postgres","INSERT"
+"auth","audit_log_entries","postgres","REFERENCES"
+"auth","audit_log_entries","postgres","SELECT"
+"auth","audit_log_entries","postgres","TRIGGER"
+"auth","audit_log_entries","postgres","TRUNCATE"
+"auth","audit_log_entries","postgres","UPDATE"
+"auth","audit_log_entries","supabase_auth_admin","DELETE"
+"auth","audit_log_entries","supabase_auth_admin","INSERT"
+"auth","audit_log_entries","supabase_auth_admin","REFERENCES"
+"auth","audit_log_entries","supabase_auth_admin","SELECT"
+"auth","audit_log_entries","supabase_auth_admin","TRIGGER"
+"auth","audit_log_entries","supabase_auth_admin","TRUNCATE"
+"auth","audit_log_entries","supabase_auth_admin","UPDATE"
+"auth","flow_state","dashboard_user","DELETE"
+"auth","flow_state","dashboard_user","INSERT"
+"auth","flow_state","dashboard_user","REFERENCES"
+"auth","flow_state","dashboard_user","SELECT"
+"auth","flow_state","dashboard_user","TRIGGER"
+"auth","flow_state","dashboard_user","TRUNCATE"
+"auth","flow_state","dashboard_user","UPDATE"
+"auth","flow_state","postgres","DELETE"
+"auth","flow_state","postgres","INSERT"
+"auth","flow_state","postgres","REFERENCES"
+"auth","flow_state","postgres","SELECT"
+"auth","flow_state","postgres","TRIGGER"
+"auth","flow_state","postgres","TRUNCATE"
+"auth","flow_state","postgres","UPDATE"
+"auth","flow_state","supabase_auth_admin","DELETE"
+"auth","flow_state","supabase_auth_admin","INSERT"
+"auth","flow_state","supabase_auth_admin","REFERENCES"
+"auth","flow_state","supabase_auth_admin","SELECT"
+"auth","flow_state","supabase_auth_admin","TRIGGER"
+"auth","flow_state","supabase_auth_admin","TRUNCATE"
+"auth","flow_state","supabase_auth_admin","UPDATE"
+"auth","identities","dashboard_user","DELETE"
+"auth","identities","dashboard_user","INSERT"
+"auth","identities","dashboard_user","REFERENCES"
+"auth","identities","dashboard_user","SELECT"
+"auth","identities","dashboard_user","TRIGGER"
+"auth","identities","dashboard_user","TRUNCATE"
+"auth","identities","dashboard_user","UPDATE"
+"auth","identities","postgres","DELETE"
+"auth","identities","postgres","INSERT"
+"auth","identities","postgres","REFERENCES"
+"auth","identities","postgres","SELECT"
+"auth","identities","postgres","TRIGGER"
+"auth","identities","postgres","TRUNCATE"
+"auth","identities","postgres","UPDATE"
+"auth","identities","supabase_auth_admin","DELETE"
+"auth","identities","supabase_auth_admin","INSERT"
+"auth","identities","supabase_auth_admin","REFERENCES"
+"auth","identities","supabase_auth_admin","SELECT"
+"auth","identities","supabase_auth_admin","TRIGGER"
+"auth","identities","supabase_auth_admin","TRUNCATE"
+"auth","identities","supabase_auth_admin","UPDATE"
+"auth","instances","dashboard_user","DELETE"
+"auth","instances","dashboard_user","INSERT"
+"auth","instances","dashboard_user","REFERENCES"
+"auth","instances","dashboard_user","SELECT"
+"auth","instances","dashboard_user","TRIGGER"
+"auth","instances","dashboard_user","TRUNCATE"
+"auth","instances","dashboard_user","UPDATE"
+"auth","instances","postgres","DELETE"
+"auth","instances","postgres","INSERT"
+"auth","instances","postgres","REFERENCES"
+"auth","instances","postgres","SELECT"
+"auth","instances","postgres","TRIGGER"
+"auth","instances","postgres","TRUNCATE"
+"auth","instances","postgres","UPDATE"
+"auth","instances","supabase_auth_admin","DELETE"
+"auth","instances","supabase_auth_admin","INSERT"
+"auth","instances","supabase_auth_admin","REFERENCES"
+"auth","instances","supabase_auth_admin","SELECT"
+"auth","instances","supabase_auth_admin","TRIGGER"
+"auth","instances","supabase_auth_admin","TRUNCATE"
+"auth","instances","supabase_auth_admin","UPDATE"
+"auth","mfa_amr_claims","dashboard_user","DELETE"
+"auth","mfa_amr_claims","dashboard_user","INSERT"
+"auth","mfa_amr_claims","dashboard_user","REFERENCES"
+"auth","mfa_amr_claims","dashboard_user","SELECT"
+"auth","mfa_amr_claims","dashboard_user","TRIGGER"
+"auth","mfa_amr_claims","dashboard_user","TRUNCATE"
+"auth","mfa_amr_claims","dashboard_user","UPDATE"
+"auth","mfa_amr_claims","postgres","DELETE"
+"auth","mfa_amr_claims","postgres","INSERT"
+"auth","mfa_amr_claims","postgres","REFERENCES"
+"auth","mfa_amr_claims","postgres","SELECT"
+"auth","mfa_amr_claims","postgres","TRIGGER"
+"auth","mfa_amr_claims","postgres","TRUNCATE"
+"auth","mfa_amr_claims","postgres","UPDATE"
+"auth","mfa_amr_claims","supabase_auth_admin","DELETE"
+"auth","mfa_amr_claims","supabase_auth_admin","INSERT"
+
+
+# List all indexes:
+"schemaname","tablename","indexname","indexdef"
+"auth","audit_log_entries","audit_log_entries_pkey","CREATE UNIQUE INDEX audit_log_entries_pkey ON auth.audit_log_entries USING btree (id)"
+"auth","audit_log_entries","audit_logs_instance_id_idx","CREATE INDEX audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (instance_id)"
+"auth","flow_state","flow_state_created_at_idx","CREATE INDEX flow_state_created_at_idx ON auth.flow_state USING btree (created_at DESC)"
+"auth","flow_state","flow_state_pkey","CREATE UNIQUE INDEX flow_state_pkey ON auth.flow_state USING btree (id)"
+"auth","flow_state","idx_auth_code","CREATE INDEX idx_auth_code ON auth.flow_state USING btree (auth_code)"
+"auth","flow_state","idx_user_id_auth_method","CREATE INDEX idx_user_id_auth_method ON auth.flow_state USING btree (user_id, authentication_method)"
+"auth","identities","identities_email_idx","CREATE INDEX identities_email_idx ON auth.identities USING btree (email text_pattern_ops)"
+"auth","identities","identities_pkey","CREATE UNIQUE INDEX identities_pkey ON auth.identities USING btree (id)"
+"auth","identities","identities_provider_id_provider_unique","CREATE UNIQUE INDEX identities_provider_id_provider_unique ON auth.identities USING btree (provider_id, provider)"
+"auth","identities","identities_user_id_idx","CREATE INDEX identities_user_id_idx ON auth.identities USING btree (user_id)"
+"auth","instances","instances_pkey","CREATE UNIQUE INDEX instances_pkey ON auth.instances USING btree (id)"
+"auth","mfa_amr_claims","amr_id_pk","CREATE UNIQUE INDEX amr_id_pk ON auth.mfa_amr_claims USING btree (id)"
+"auth","mfa_amr_claims","mfa_amr_claims_session_id_authentication_method_pkey","CREATE UNIQUE INDEX mfa_amr_claims_session_id_authentication_method_pkey ON auth.mfa_amr_claims USING btree (session_id, authentication_method)"
+"auth","mfa_challenges","mfa_challenge_created_at_idx","CREATE INDEX mfa_challenge_created_at_idx ON auth.mfa_challenges USING btree (created_at DESC)"
+"auth","mfa_challenges","mfa_challenges_pkey","CREATE UNIQUE INDEX mfa_challenges_pkey ON auth.mfa_challenges USING btree (id)"
+"auth","mfa_factors","factor_id_created_at_idx","CREATE INDEX factor_id_created_at_idx ON auth.mfa_factors USING btree (user_id, created_at)"
+"auth","mfa_factors","mfa_factors_last_challenged_at_key","CREATE UNIQUE INDEX mfa_factors_last_challenged_at_key ON auth.mfa_factors USING btree (last_challenged_at)"
+"auth","mfa_factors","mfa_factors_phone_key","CREATE UNIQUE INDEX mfa_factors_phone_key ON auth.mfa_factors USING btree (phone)"
+"auth","mfa_factors","mfa_factors_pkey","CREATE UNIQUE INDEX mfa_factors_pkey ON auth.mfa_factors USING btree (id)"
+"auth","mfa_factors","mfa_factors_user_friendly_name_unique","CREATE UNIQUE INDEX mfa_factors_user_friendly_name_unique ON auth.mfa_factors USING btree (friendly_name, user_id) WHERE (TRIM(BOTH FROM friendly_name) <> ''::text)"
+"auth","mfa_factors","mfa_factors_user_id_idx","CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id)"
+"auth","mfa_factors","unique_verified_phone_factor","CREATE UNIQUE INDEX unique_verified_phone_factor ON auth.mfa_factors USING btree (user_id, phone)"
+"auth","one_time_tokens","one_time_tokens_pkey","CREATE UNIQUE INDEX one_time_tokens_pkey ON auth.one_time_tokens USING btree (id)"
+"auth","one_time_tokens","one_time_tokens_relates_to_hash_idx","CREATE INDEX one_time_tokens_relates_to_hash_idx ON auth.one_time_tokens USING hash (relates_to)"
+"auth","one_time_tokens","one_time_tokens_token_hash_hash_idx","CREATE INDEX one_time_tokens_token_hash_hash_idx ON auth.one_time_tokens USING hash (token_hash)"
+"auth","one_time_tokens","one_time_tokens_user_id_token_type_key","CREATE UNIQUE INDEX one_time_tokens_user_id_token_type_key ON auth.one_time_tokens USING btree (user_id, token_type)"
+"auth","refresh_tokens","refresh_tokens_instance_id_idx","CREATE INDEX refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (instance_id)"
+"auth","refresh_tokens","refresh_tokens_instance_id_user_id_idx","CREATE INDEX refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING btree (instance_id, user_id)"
+"auth","refresh_tokens","refresh_tokens_parent_idx","CREATE INDEX refresh_tokens_parent_idx ON auth.refresh_tokens USING btree (parent)"
+"auth","refresh_tokens","refresh_tokens_pkey","CREATE UNIQUE INDEX refresh_tokens_pkey ON auth.refresh_tokens USING btree (id)"
+"auth","refresh_tokens","refresh_tokens_session_id_revoked_idx","CREATE INDEX refresh_tokens_session_id_revoked_idx ON auth.refresh_tokens USING btree (session_id, revoked)"
+"auth","refresh_tokens","refresh_tokens_token_unique","CREATE UNIQUE INDEX refresh_tokens_token_unique ON auth.refresh_tokens USING btree (token)"
+"auth","refresh_tokens","refresh_tokens_updated_at_idx","CREATE INDEX refresh_tokens_updated_at_idx ON auth.refresh_tokens USING btree (updated_at DESC)"
+"auth","saml_providers","saml_providers_entity_id_key","CREATE UNIQUE INDEX saml_providers_entity_id_key ON auth.saml_providers USING btree (entity_id)"
+"auth","saml_providers","saml_providers_pkey","CREATE UNIQUE INDEX saml_providers_pkey ON auth.saml_providers USING btree (id)"
+"auth","saml_providers","saml_providers_sso_provider_id_idx","CREATE INDEX saml_providers_sso_provider_id_idx ON auth.saml_providers USING btree (sso_provider_id)"
+"auth","saml_relay_states","saml_relay_states_created_at_idx","CREATE INDEX saml_relay_states_created_at_idx ON auth.saml_relay_states USING btree (created_at DESC)"
+"auth","saml_relay_states","saml_relay_states_for_email_idx","CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btree (for_email)"
+"auth","saml_relay_states","saml_relay_states_pkey","CREATE UNIQUE INDEX saml_relay_states_pkey ON auth.saml_relay_states USING btree (id)"
+"auth","saml_relay_states","saml_relay_states_sso_provider_id_idx","CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USING btree (sso_provider_id)"
+"auth","schema_migrations","schema_migrations_pkey","CREATE UNIQUE INDEX schema_migrations_pkey ON auth.schema_migrations USING btree (version)"
+"auth","sessions","sessions_not_after_idx","CREATE INDEX sessions_not_after_idx ON auth.sessions USING btree (not_after DESC)"
+"auth","sessions","sessions_pkey","CREATE UNIQUE INDEX sessions_pkey ON auth.sessions USING btree (id)"
+"auth","sessions","sessions_user_id_idx","CREATE INDEX sessions_user_id_idx ON auth.sessions USING btree (user_id)"
+"auth","sessions","user_id_created_at_idx","CREATE INDEX user_id_created_at_idx ON auth.sessions USING btree (user_id, created_at)"
+"auth","sso_domains","sso_domains_domain_idx","CREATE UNIQUE INDEX sso_domains_domain_idx ON auth.sso_domains USING btree (lower(domain))"
+"auth","sso_domains","sso_domains_pkey","CREATE UNIQUE INDEX sso_domains_pkey ON auth.sso_domains USING btree (id)"
+"auth","sso_domains","sso_domains_sso_provider_id_idx","CREATE INDEX sso_domains_sso_provider_id_idx ON auth.sso_domains USING btree (sso_provider_id)"
+"auth","sso_providers","sso_providers_pkey","CREATE UNIQUE INDEX sso_providers_pkey ON auth.sso_providers USING btree (id)"
+"auth","sso_providers","sso_providers_resource_id_idx","CREATE UNIQUE INDEX sso_providers_resource_id_idx ON auth.sso_providers USING btree (lower(resource_id))"
+"auth","users","confirmation_token_idx","CREATE UNIQUE INDEX confirmation_token_idx ON auth.users USING btree (confirmation_token) WHERE ((confirmation_token)::text !~ '^[0-9 ]*$'::text)"
+"auth","users","email_change_token_current_idx","CREATE UNIQUE INDEX email_change_token_current_idx ON auth.users USING btree (email_change_token_current) WHERE ((email_change_token_current)::text !~ '^[0-9 ]*$'::text)"
+"auth","users","email_change_token_new_idx","CREATE UNIQUE INDEX email_change_token_new_idx ON auth.users USING btree (email_change_token_new) WHERE ((email_change_token_new)::text !~ '^[0-9 ]*$'::text)"
+"auth","users","reauthentication_token_idx","CREATE UNIQUE INDEX reauthentication_token_idx ON auth.users USING btree (reauthentication_token) WHERE ((reauthentication_token)::text !~ '^[0-9 ]*$'::text)"
+"auth","users","recovery_token_idx","CREATE UNIQUE INDEX recovery_token_idx ON auth.users USING btree (recovery_token) WHERE ((recovery_token)::text !~ '^[0-9 ]*$'::text)"
+"auth","users","users_email_partial_key","CREATE UNIQUE INDEX users_email_partial_key ON auth.users USING btree (email) WHERE (is_sso_user = false)"
+"auth","users","users_instance_id_email_idx","CREATE INDEX users_instance_id_email_idx ON auth.users USING btree (instance_id, lower((email)::text))"
+"auth","users","users_instance_id_idx","CREATE INDEX users_instance_id_idx ON auth.users USING btree (instance_id)"
+"auth","users","users_is_anonymous_idx","CREATE INDEX users_is_anonymous_idx ON auth.users USING btree (is_anonymous)"
+"auth","users","users_phone_key","CREATE UNIQUE INDEX users_phone_key ON auth.users USING btree (phone)"
+"auth","users","users_pkey","CREATE UNIQUE INDEX users_pkey ON auth.users USING btree (id)"
+"public","agents","agents_pkey","CREATE UNIQUE INDEX agents_pkey ON public.agents USING btree (id)"
+"public","agents","idx_agents_first_message","CREATE INDEX idx_agents_first_message ON public.agents USING btree (first_message)"
+"public","agents","idx_agents_greeting","CREATE INDEX idx_agents_greeting ON public.agents USING btree (greeting)"
+"public","agents","idx_agents_guidelines","CREATE INDEX idx_agents_guidelines ON public.agents USING btree (guidelines)"
+"public","agents","idx_agents_hipaa","CREATE INDEX idx_agents_hipaa ON public.agents USING btree (hipaa_enabled)"
+"public","agents","idx_agents_metadata_gin","CREATE INDEX idx_agents_metadata_gin ON public.agents USING gin (metadata)"
+"public","agents","idx_agents_model_provider","CREATE INDEX idx_agents_model_provider ON public.agents USING btree (((model_config ->> 'provider'::text)))"
+"public","agents","idx_agents_personality","CREATE INDEX idx_agents_personality ON public.agents USING btree (personality)"
+"public","agents","idx_agents_transcriber_provider","CREATE INDEX idx_agents_transcriber_provider ON public.agents USING btree (((transcriber_config ->> 'provider'::text)))"
+"public","agents","idx_agents_voice_humanize","CREATE INDEX idx_agents_voice_humanize ON public.agents USING btree (((voice_config ->> 'humanizeConversation'::text)))"
+"public","agents","idx_agents_voice_provider","CREATE INDEX idx_agents_voice_provider ON public.agents USING btree (((voice_config ->> 'provider'::text)))"
+"public","call_logs","call_logs_pkey","CREATE UNIQUE INDEX call_logs_pkey ON public.call_logs USING btree (id)"
+"public","calls","calls_pkey","CREATE UNIQUE INDEX calls_pkey ON public.calls USING btree (id)"
+"public","knowledge_base","idx_knowledge_base_answer_gin","CREATE INDEX idx_knowledge_base_answer_gin ON public.knowledge_base USING gin (answer gin_trgm_ops)"
+"public","knowledge_base","idx_knowledge_base_question_gin","CREATE INDEX idx_knowledge_base_question_gin ON public.knowledge_base USING gin (question gin_trgm_ops)"
+"public","knowledge_base","knowledge_base_pkey","CREATE UNIQUE INDEX knowledge_base_pkey ON public.knowledge_base USING btree (id)"
+"public","organizations","organizations_pkey","CREATE UNIQUE INDEX organizations_pkey ON public.organizations USING btree (id)"
+"public","users","users_email_key","CREATE UNIQUE INDEX users_email_key ON public.users USING btree (email)"
+"public","users","users_pkey","CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id)"
+"public","voice_agent_configs","voice_agent_configs_pkey","CREATE UNIQUE INDEX voice_agent_configs_pkey ON public.voice_agent_configs USING btree (id)"
+"public","voice_agents","voice_agents_pkey","CREATE UNIQUE INDEX voice_agents_pkey ON public.voice_agents USING btree (id)"
+"public","workflows","workflows_pkey","CREATE UNIQUE INDEX workflows_pkey ON public.workflows USING btree (id)"
+
+
+
+# Check Row Level Security status for tables:
+"schema_name","table_name","row_level_security_enabled","force_row_level_security"
+"public","cold_call_script_responses","true","false"
+"public","voice_agent_configs","false","false"
+"public","workflows","true","false"
+"public","organizations","true","false"
+"public","knowledge_base","true","false"
+"public","agents","true","false"
+"public","users","true","false"
+"public","voice_agents","true","false"
+"public","calls","true","false"
+"public","call_logs","true","false"
+
+# View all triggers:
+Success. No rows returned
+
+
+# Database size and table sizes:
+"schema_name","table_name","total_size","data_size","external_size"
+"public","cold_call_script_responses","34 MB","640 kB","34 MB"
+"public","call_logs","3136 kB","152 kB","2984 kB"
+"public","calls","2240 kB","304 kB","1936 kB"
+"public","voice_agent_configs","520 kB","24 kB","496 kB"
+"public","agents","304 kB","40 kB","264 kB"
+"auth","users","160 kB","8192 bytes","152 kB"
+"auth","refresh_tokens","128 kB","8192 bytes","120 kB"
+"auth","one_time_tokens","112 kB","8192 bytes","104 kB"
+"auth","identities","80 kB","8192 bytes","72 kB"
+"auth","sessions","80 kB","8192 bytes","72 kB"
+"auth","mfa_factors","64 kB","0 bytes","64 kB"
+"public","knowledge_base","48 kB","0 bytes","48 kB"
+"auth","audit_log_entries","48 kB","8192 bytes","40 kB"
+"public","users","48 kB","8192 bytes","40 kB"
+"auth","mfa_amr_claims","48 kB","8192 bytes","40 kB"
+"auth","flow_state","40 kB","0 bytes","40 kB"
+"auth","saml_relay_states","40 kB","0 bytes","40 kB"
+"auth","saml_providers","32 kB","0 bytes","32 kB"
+"auth","sso_domains","32 kB","0 bytes","32 kB"
+"public","organizations","32 kB","8192 bytes","24 kB"
+"auth","mfa_challenges","24 kB","0 bytes","24 kB"
+"auth","schema_migrations","24 kB","8192 bytes","16 kB"
+"auth","sso_providers","24 kB","0 bytes","24 kB"
+"public","workflows","16 kB","0 bytes","16 kB"
+"public","voice_agents","16 kB","0 bytes","16 kB"
+"auth","instances","16 kB","0 bytes","16 kB"
+
+
+# Current active connections:
+
+"database","username","application_name","client_addr","backend_start","state","state_change"
+"postgres","postgres","","","2024-12-23 19:02:16.882719+00","",""
+"postgres","postgres","pg_cron scheduler","","2024-12-23 19:02:16.886374+00","",""
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.27689+00","idle","2025-01-03 04:25:28.861113+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.278848+00","idle","2025-01-03 04:25:29.558886+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.280365+00","idle","2025-01-03 04:25:28.673791+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.281601+00","idle","2025-01-03 04:25:28.859548+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.283775+00","idle","2025-01-03 04:25:29.672409+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.285516+00","idle","2025-01-03 04:25:28.673612+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.286633+00","idle","2025-01-03 04:25:28.68359+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.289886+00","idle","2025-01-03 04:25:28.858699+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.291003+00","idle","2025-01-03 04:25:28.857776+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.29245+00","idle","2025-01-03 04:25:28.674308+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-29 21:50:32.082122+00","active","2024-12-29 21:50:32.128194+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.454323+00","idle","2025-01-03 04:25:28.843007+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.456526+00","idle","2025-01-03 04:25:28.844701+00"
+"_supabase","supabase_admin","","10.0.1.6","2024-12-23 19:02:28.45763+00","idle","2025-01-03 04:25:28.844647+00"
+"postgres","authenticator","PostgREST 12.2.0","10.0.1.10","2025-01-03 04:00:08.371842+00","idle","2025-01-03 04:00:08.46809+00"
+"postgres","authenticator","PostgREST 12.2.0","10.0.1.10","2024-12-23 19:02:32.725758+00","idle","2024-12-23 19:02:32.791872+00"
+"postgres","supabase_storage_admin","","10.0.1.15","2024-12-23 19:02:46.565899+00","idle","2025-01-03 04:25:21.30038+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.938722+00","idle","2025-01-03 04:25:29.795571+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.940855+00","idle","2025-01-03 04:25:28.798187+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.937219+00","idle","2025-01-03 04:25:28.79803+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.947143+00","idle","2025-01-03 04:25:28.798618+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.949223+00","idle","2025-01-03 04:25:29.795375+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.95313+00","idle","2025-01-03 04:25:29.797844+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.957831+00","idle","2025-01-03 04:25:29.797218+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.960345+00","idle","2025-01-03 04:25:29.798053+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.963882+00","idle","2025-01-03 04:25:28.798839+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.966724+00","idle","2025-01-03 04:25:29.797703+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.968818+00","idle","2025-01-03 04:25:29.796676+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.97226+00","idle","2025-01-03 04:25:29.797931+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.974798+00","idle","2025-01-03 04:25:28.798286+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.974794+00","idle","2025-01-03 04:25:29.795162+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.977533+00","idle","2025-01-03 04:25:28.796535+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.981654+00","idle","2025-01-03 04:25:29.795271+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.985354+00","idle","2025-01-03 04:25:28.798533+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.989306+00","idle","2025-01-03 04:25:28.798379+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.990273+00","idle","2025-01-03 04:25:29.79755+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.995348+00","idle","2025-01-03 04:25:28.798682+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:56.998546+00","idle","2025-01-03 04:25:29.796812+00"
+"_supabase","supabase_admin","cluster_node_supavisor@a5b8b39d76a7","10.0.1.9","2024-12-23 19:02:56.999646+00","idle","2025-01-03 04:25:28.927271+00"
+"_supabase","supabase_admin","cluster_node_supavisor@a5b8b39d76a7","10.0.1.9","2024-12-23 19:02:57.003112+00","idle","2025-01-03 04:25:28.929144+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:57.033079+00","idle","2025-01-03 04:25:28.798459+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:57.070431+00","idle","2025-01-03 04:25:28.797933+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:57.08344+00","idle","2025-01-03 04:25:29.797158+00"
+"_supabase","supabase_admin","supavisor_meta","10.0.1.9","2024-12-23 19:02:57.085826+00","idle","2025-01-03 04:25:29.795428+00"
+"postgres","supabase_admin","supabase_mt_realtime","10.0.1.12","2024-12-23 19:02:57.69987+00","idle","2025-01-03 04:25:30.142384+00"
+"postgres","supabase_admin","supabase_mt_realtime","10.0.1.12","2024-12-23 19:02:57.701491+00","idle","2025-01-03 04:25:29.142114+00"
+"postgres","supabase_admin","supabase_mt_realtime","10.0.1.12","2024-12-23 19:02:57.7048+00","idle","2025-01-03 04:25:29.142297+00"
+"postgres","supabase_admin","supabase_mt_realtime","10.0.1.12","2024-12-23 19:02:57.704799+00","idle","2025-01-03 04:25:29.142519+00"
+"postgres","supabase_admin","supabase_mt_realtime","10.0.1.12","2024-12-23 19:02:57.706139+00","idle","2025-01-03 04:25:29.14238+00"
+"postgres","supabase_admin","realtime_connect","10.0.1.12","2025-01-03 04:20:49.792989+00","idle","2025-01-03 04:25:30.18464+00"
+"postgres","supabase_auth_admin","","10.0.1.11","2025-01-02 09:54:38.152805+00","idle","2025-01-03 03:59:59.014811+00"
+"postgres","supabase_admin","","10.0.1.14","2025-01-03 04:25:30.491459+00","active","2025-01-03 04:25:30.499326+00"
+"postgres","supabase_admin","","10.0.1.14","2025-01-03 04:25:28.503639+00","active","2025-01-03 04:25:28.539627+00"
+"postgres","supabase_admin","realtime_listen","10.0.1.12","2025-01-03 04:20:49.822819+00","idle","2025-01-03 04:25:29.893984+00"

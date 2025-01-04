@@ -76,8 +76,6 @@
 - User menu accessible from sidebar with improved UX
 - Development server running and changes verified
 
-
-
 ## 2025-01-02
 ### Fixed Agent Selector Dropdown Error
 
@@ -161,9 +159,74 @@ const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => 
 - Empty values converted to empty strings
 - Proper error handling for validation failures
 
+## Agent Selector and Top Navigation Fixes (Jan 4, 2025)
 
+### Issue Overview
+After integrating Supabase Auth, we encountered issues with the Agent Selector dropdown and top navigation menu:
+1. The Agent Selector was throwing an iteration error due to the Command component
+2. The top navigation menu was showing on all pages when it should only appear on agent-related pages
+3. There was a redundant user menu in both the top navigation and sidebar
 
-************************************
+### Changes Made
+
+#### 1. Agent Selector Component
+- Replaced the Command component from cmdk with the Select component from shadcn/ui
+- Simplified state management by removing unnecessary states (`open` and `selectedAgentName`)
+- Maintained the same styling and functionality while fixing the iteration error
+- Updated the component to use:
+  - `Select` and `SelectTrigger` for the dropdown button
+  - `SelectContent` and `SelectItem` for the dropdown options
+  - Added proper type interfaces for Agent data
+
+#### 2. Top Navigation
+- Restricted visibility to only agent-related pages:
+  ```typescript
+  const agentDesignPaths = [
+    '/agents/design',
+    '/agents/knowledge-base',
+    '/agents/workflows',
+    '/agents/settings',
+    '/agents/functions'
+  ];
+  ```
+- Removed redundant user menu from top navigation since it exists in the sidebar
+- Maintained layout balance with three sections:
+  1. Left: Agent Selector (240px width)
+  2. Center: Navigation tabs
+  3. Right: Empty space (240px width) for symmetry
+- Added proper path checking to show/hide the entire navigation component
+
+#### 3. Code Organization
+- Cleaned up imports and removed unused authentication-related code
+- Improved type safety throughout components
+- Enhanced component modularity and reusability
+
+### Final Structure
+The top navigation now follows a clear hierarchy:
+```
+TopNav
+├── AgentSelector (left)
+│   └── Select Component
+├── Navigation Tabs (center)
+│   └── Agent Design
+│   └── Knowledge Base
+│   └── Workflows
+│   └── Functions
+│   └── Settings
+└── Balanced Space (right)
+```
+
+### Results
+- Fixed the iteration error in Agent Selector
+- Improved UI consistency by removing redundant elements
+- Enhanced user experience with proper navigation visibility
+- Maintained clean and maintainable code structure
+
+### Next Steps
+- Continue monitoring for any potential issues with the Agent Selector
+- Consider adding loading states for better user feedback
+- Test the navigation behavior across different routes
+- Ensure proper error handling for agent data fetching
 
 ## 2025-01-02 - Mapped agent name field to supabase
 Initial Issues
@@ -334,10 +397,3 @@ Prevention of edge cases
 Cleaner state management
 Better separation of concerns
 This solution not only fixed the immediate issues but also improved the overall architecture and user experience of the application. The code is now more maintainable, performant, and user-friendly.
-
-
-
-
-***************************
-
-
